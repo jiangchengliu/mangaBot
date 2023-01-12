@@ -5,7 +5,7 @@ rBot = config.create()
 
 subreddit = rBot.subreddit('manga')
 
-favoriteMangas = ['legend of the northern blade', 'one punch man']
+favoriteMangas = ['legend of the northern blade', 'one punch man', 'boku no kokoro no yabai yatsu']
 
 urls = []
 
@@ -17,8 +17,7 @@ for submission in subreddit.hot(limit=10):
                 urls.append(submission.url)
                 break
 
-for url in urls:
-    print(url)
+
 
 
     
