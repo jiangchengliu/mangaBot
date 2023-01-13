@@ -24,6 +24,18 @@ for submission in subreddit.hot(limit=10):
                     my_dict[submission.title] = submission.url
                     break
 
+#go through comments
+for comment in subreddit.stream.comments():
+    
+
+
+
+
+
+
+
+
+
 #create the email body content
 body = "Here is What has Updated!: \n\n"
 for key in my_dict:
