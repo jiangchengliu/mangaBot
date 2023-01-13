@@ -10,9 +10,9 @@ rec = config.RECEIVE_USER
 
 rBot = config.create()
 subreddit = rBot.subreddit('manga')
-my_list = ['legend of the northern blade', 'one punch man', 'Telework Yotabanashi',]
+my_list = ['legend of the northern blade', 'one punch man', 'Telework Yotabanashi', 'Senpai ga Uzai Kouhai no Hanashi ']
 favoriteMangas = list(map(str.lower, my_list))
-urls = []
+my_dict = {}
 
 for submission in subreddit.hot(limit=10):
     for manga in favoriteMangas:
@@ -20,12 +20,13 @@ for submission in subreddit.hot(limit=10):
             if '[DISC]' in submission.title:
                 print('Title: ' + submission.title)
                 print('URL: ' + submission.url)
-                urls.append(submission.url)
+                my_dict[submission.title] = submission.url
                 break
 
-body = "List of Urls: \n"
-for url in urls:
-    body += url + "\n"
+body = "Here is What has Updated!: \n\n"
+for key in my_dict:
+    body += key + "\n" + my_dict[key] + "\n\n"
+
 
 msg = EmailMessage()
 msg['Subject'] = 'New Manga Chapters Found!'
