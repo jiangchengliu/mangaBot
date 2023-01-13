@@ -10,7 +10,8 @@ rec = config.RECEIVE_USER
 
 rBot = config.create()
 subreddit = rBot.subreddit('manga')
-favoriteMangas = ['legend of the northern blade', 'one punch man', 'boku no kokoro no yabai yatsu']
+my_list = ['legend of the northern blade', 'one punch man', 'Telework Yotabanashi',]
+favoriteMangas = list(map(str.lower, my_list))
 urls = []
 
 for submission in subreddit.hot(limit=10):
