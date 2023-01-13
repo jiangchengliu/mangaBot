@@ -1,8 +1,8 @@
 import praw
 import config
+import emaill
 
 rBot = config.create()
-
 subreddit = rBot.subreddit('manga')
 
 favoriteMangas = ['legend of the northern blade', 'one punch man', 'boku no kokoro no yabai yatsu']
@@ -16,6 +16,13 @@ for submission in subreddit.hot(limit=10):
                 print('Title: ' + submission.title)
                 urls.append(submission.url)
                 break
+
+
+
+
+
+
+
 
 
 
