@@ -27,3 +27,4 @@ def send(msg):
         smtp.starttls()
         smtp.login(user, password)
         smtp.send_message(msg)
+        print("done!")
