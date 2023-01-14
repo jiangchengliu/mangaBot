@@ -2,6 +2,7 @@ import praw
 import config
 import smtplib
 from email.message import EmailMessage
+from praw.models import Message
 
 #email info
 user = config.EMAIL_USER
@@ -11,12 +12,14 @@ rec = config.RECEIVE_USER
 #initialize bot related variables
 rBot = config.create()
 subreddit = rBot.subreddit('manga')
-my_list = ['legend of the northern blade', 'one punch man', 'Telework Yotabanashi', 'Senpai ga Uzai Kouhai no Hanashi ']
+subreddit2 = rBot.subreddit('testingMyStuffCode')
+my_list = ['muscle exorcism', 'Telework Yotabanashi', 'Senpai ga Uzai Kouhai no Hanashi ']
 favoriteMangas = list(map(str.lower, my_list))
+title = ""
 my_dict = {}
 
 #go through submissions 
-for submission in subreddit.hot(limit=10):
+for submission in subreddit.hot(limit=25):
     for manga in favoriteMangas:
         if manga in submission.title.lower():
             if '[DISC]' in submission.title:
@@ -25,16 +28,16 @@ for submission in subreddit.hot(limit=10):
                     break
 
 #go through comments
-for comment in subreddit.stream.comments():
-    
-
-
-
-
-
-
-
-
+for comment in subreddit2.stream.comments():
+    if "add" in comment.body:
+        text = comment.body
+        start = text.index("add") + 4
+        if "!" in comment.body:
+            end = text.index("!")
+            title = text[start:end].strip()
+        if title in my_list:
+            comment.reply("already in the list!")
+        my_list.append(title)
 
 #create the email body content
 body = "Here is What has Updated!: \n\n"
