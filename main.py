@@ -20,6 +20,7 @@ for submission in subreddit.hot(limit=25):
                 if submission.title not in my_dict:
                     my_dict[submission.title] = submission.url
                     break
+
 def goThroughCom():
     #go through comments
     for comment in subreddit.stream.comments():
@@ -32,7 +33,10 @@ def goThroughCom():
                 if title not in my_list:
                     my_list.append(title)
                     break
+    print(my_list)
 
+comments_thread = threading.Thread(target=goThroughCom)
+comments_thread.start()
 body = eMail.create_body(my_dict)
 msg = eMail.set_mail(body)
 eMail.send(msg)
