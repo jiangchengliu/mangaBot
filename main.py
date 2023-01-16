@@ -4,50 +4,43 @@ import eMail
 import threading 
 
 #initialize bot related variables
-rBot = config.create()
-subreddit = rBot.subreddit('manga')
-sub = rBot.subreddit('testingMyStuffCode')
-my_list = ["One Piece", "Legend of the Northern Blade", "Jujutsu Kaisen", "Ayakashi Triangle"]
+my_list = []
 favoriteMangas = list(map(str.lower, my_list))
 title = ""
 my_dict = {}
 processed_comments = []
 
-#go through submissions 
-for submission in subreddit.hot(limit=25):
-    for manga in favoriteMangas:
-        if manga in submission.title.lower():
-            if '[DISC]' in submission.title:
-                if submission.title not in my_dict:
-                    my_dict[submission.title] = submission.url
-                    break
+def check_for_updates(submission):
+    if submission.title not in my_dict:
+        return True
 
-def goThroughCom(sub, list, p_com):
-    global my_list
-    global processed_comments
-    for comment in sub.stream.comments(skip_existing=True):
-        if comment.id not in processed_comments:
-            if "add" in comment.body:
-                text = comment.body
-                start = text.index("add") + 4
-                if "manga" in comment.body:
-                    end = text.index("mangaBot")
-                    title = text[start:end].strip()
-                    if title not in my_list:
-                        my_list.append(title)
-            processed_comments.append(comment.id)
-        print(my_list)
-        print(processed_comments)
+def favorite_title(comment):
+    if comment.id not in processed_comments:
+        if "add" in comment.body:
+            text = comment.body
+            start = text.index("add") + 4
+            if "manga" in comment.body:
+                end = text.index("manga")
+                title = text[start:end].strip()
+                if title not in my_list:
+                    my_list.append(title)
+                    processed_comments.append(comment.id)  
+def main():
+    rBot = config.create()
+    subreddit = rBot.subreddit('manga')
+    sub = rBot.subreddit('testingMyStuffCode')
 
-print(my_list)
-print(processed_comments)
-
-comments_thread = threading.Thread(target=goThroughCom, args=(sub, my_list, processed_comments))
-comments_thread.start()
+    for submission in subreddit.hot(limit=25):
+        for manga in favoriteMangas:
+            if manga in submission.title.lower():
+                if '[DISC]' in submission.title:
+                    if check_for_updates(submission):
+                        my_dict[submission.title] = submission.url
+            for comment in submission.comments.list():
+                favorite_title(comment)
+    for comment in subreddit.stream.comments(skip_existing=True):
+            favorite_title(comment) 
 
 body = eMail.create_body(my_dict)
 msg = eMail.set_mail(body)
 eMail.send(msg)
-
-
-
