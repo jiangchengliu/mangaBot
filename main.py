@@ -6,7 +6,8 @@ import threading
 #initialize bot related variables
 rBot = config.create()
 subreddit = rBot.subreddit('manga')
-my_list = ['Telework Yotabanashi', 'Senpai ga Uzai Kouhai no Hanashi', 'Worthless regression', 'Tying the Knot with an Amagami Sister']
+sub = rBot.subreddit('testingMyStuffCode')
+my_list = ["ayakashi triangle", "cockroa-chan"]
 favoriteMangas = list(map(str.lower, my_list))
 title = ""
 my_dict = {}
@@ -21,25 +22,31 @@ for submission in subreddit.hot(limit=25):
                     my_dict[submission.title] = submission.url
                     break
 
-def goThroughCom():
-    #go through comments
-    for comment in subreddit.stream.comments():
+def goThroughCom(sub, list):
+    global my_list
+    for comment in sub.stream.comments():
+        found_add = False
         if "add" in comment.body:
             text = comment.body
             start = text.index("add") + 4
-            if "!" in comment.body:
-                end = text.index("!")
+            if "manga" in comment.body:
+                end = text.index("mangaBot")
                 title = text[start:end].strip()
                 if title not in my_list:
                     my_list.append(title)
-                    break
-    print(my_list)
+                    found_add = True
+        if found_add:
+            break
+        
+print(my_list)
 
-comments_thread = threading.Thread(target=goThroughCom)
+comments_thread = threading.Thread(target=goThroughCom, args=(sub, my_list))
 comments_thread.start()
+
 body = eMail.create_body(my_dict)
 msg = eMail.set_mail(body)
 eMail.send(msg)
+my_dict.clear()
 
 
 
