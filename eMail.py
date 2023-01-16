@@ -7,15 +7,14 @@ user = config.EMAIL_USER
 password = config.PASSWORD
 rec = config.RECEIVE_USER
 
-def create_body(my_dict):
+def create_body(submission, bot):
     body = "Update!!!: \n\n"
-    for key in my_dict:
-        body += key + "\n" + my_dict[key] + "\n\n"
+    body += submission.title + "\n" + submission.url + bot.config.reddit_url + "\n" + submission.permalink + "\n\n"
     return body
 
 def set_mail(email_body):
     msg = EmailMessage()
-    msg['Subject'] = 'New Manga Chapters Found!'
+    msg['Subject'] = 'New Chapters Found!'
     msg['From'] = user
     msg['To'] = rec
     msg.set_content(email_body)
