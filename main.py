@@ -5,14 +5,12 @@ import threading
 import time
 
 #initialize bot related variables
-my_list = ["Please Go Home, Akutsu-san!", "Dandadan"]
+my_list = ["One Punch man", "One Piece", "Ace of Diamond"]
 favoriteMangas = list(map(str.lower, my_list))
 title = ""
-my_dict = {}
 processed_comments = []
 
-def send_email():
-    body = eMail.create_body(my_dict)
+def send_email(body):
     msg = eMail.set_mail(body)
     eMail.send(msg)
 
@@ -37,16 +35,16 @@ def main():
     subreddit = rBot.subreddit('manga')
     sub = rBot.subreddit('testingMyStuffCode')
 
-    for submission in subreddit.hot(limit=25):
+    for submission in sub.stream.submissions(skip_existing=True):
         for manga in favoriteMangas:
             if manga in submission.title.lower():
                 if '[DISC]' in submission.title:
                     if check_for_updates(submission):
-                        my_dict[submission.title] = submission.url
+                        body = eMail.create_body(submission, rBot)
                         send_email()
             for comment in submission.comments.list():
                 favorite_title(comment)
-    for comment in subreddit.stream.comments(skip_existing=True):
+    for comment in sub.stream.comments(skip_existing=True):
             favorite_title(comment)
 
 main()
