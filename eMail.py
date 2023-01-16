@@ -8,7 +8,7 @@ password = config.PASSWORD
 rec = config.RECEIVE_USER
 
 def create_body(my_dict):
-    body = "Here is What has Updated!: \n\n"
+    body = "Update!!!: \n\n"
     for key in my_dict:
         body += key + "\n" + my_dict[key] + "\n\n"
     return body
