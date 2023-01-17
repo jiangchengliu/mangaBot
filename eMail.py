@@ -8,13 +8,14 @@ password = config.PASSWORD
 rec = config.RECEIVE_USER
 
 def create_body(submission, bot):
-    body = "Update!!!: \n\n"
-    body += submission.title + "\n" + submission.url + bot.config.reddit_url + "\n" + submission.permalink + "\n\n"
+    discuss = bot.config.reddit_url + submission.permalink
+    body = "Update!: \n"
+    body += submission.title + "\n\n" + submission.url + "\n\n" + discuss + "\n\n"
     return body
 
 def set_mail(email_body):
     msg = EmailMessage()
-    msg['Subject'] = 'New Chapters Found!'
+    msg['Subject'] = 'New Chapter Found!'
     msg['From'] = user
     msg['To'] = rec
     msg.set_content(email_body)
@@ -26,3 +27,4 @@ def send(msg):
         smtp.starttls()
         smtp.login(user, password)
         smtp.send_message(msg)
+        print("done!")
