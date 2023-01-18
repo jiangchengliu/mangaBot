@@ -32,18 +32,19 @@ def main():
     rBot = config.create()
     subreddit = rBot.subreddit('manga')
     sub = rBot.subreddit('testingMyStuffCode')
-
-    for submission in sub.stream.submissions(skip_existing=True):
-        for manga in favoriteMangas:
-            if manga in submission.title.lower():
-                if '[DISC]' in submission.title:
-                    if check_for_updates(submission):
-                        body = eMail.create_body(submission, rBot)
-                        msg = eMail.set_mail(body)
-                        eMail.send(msg)
-            for comment in submission.comments.list():
+    while True:
+        for submission in sub.stream.submissions(skip_existing=True):
+            for manga in favoriteMangas:
+                if manga in submission.title.lower():
+                    if '[DISC]' in submission.title:
+                        if check_for_updates(submission):
+                            body = eMail.create_body(submission, rBot)
+                            msg = eMail.set_mail(body)
+                            eMail.send(msg)
+                for comment in submission.comments.list():
+                    favorite_title(comment)
+        for comment in sub.stream.comments(skip_existing=True):
                 favorite_title(comment)
-    for comment in sub.stream.comments(skip_existing=True):
-            favorite_title(comment)
+        
 
 main()
